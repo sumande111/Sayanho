@@ -1,0 +1,52 @@
+﻿@inherits ComponentBase
+
+<canvas id="customCanvas"
+        width="@CanvasWidth"
+        height="@CanvasHeight"
+        style="border:1px solid black; background-color: white; cursor: grab;"
+        @onmousedown="OnMouseDown"
+        @onmousemove="OnMouseMove"
+        @onmouseup="OnMouseUp"
+        @onwheel="OnZoom">
+</canvas>
+
+@code {
+    private int CanvasWidth = 3600;
+    private int CanvasHeight = 2400;
+    private double Scale = 1.0;  // Zoom level
+
+    private bool isDragging = false;
+    private int startX, startY;
+    private int offsetX = 0, offsetY = 0; // For panning
+
+    private async Task OnMouseDown(MouseEventArgs e)
+    {
+        isDragging = true;
+        startX = (int)e.ClientX - offsetX;
+        startY = (int)e.ClientY - offsetY;
+    }
+
+    private async Task OnMouseMove(MouseEventArgs e)
+    {
+        if (isDragging)
+        {
+            offsetX = (int)e.ClientX - startX;
+            offsetY = (int)e.ClientY - startY;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnMouseUp(MouseEventArgs e)
+    {
+        isDragging = false;
+    }
+
+    private async Task OnZoom(WheelEventArgs e)
+    {
+        if (e.DeltaY < 0) Scale *= 1.1; // Zoom in
+        else if (e.DeltaY > 0) Scale /= 1.1; // Zoom out
+
+        Scale = Math.Clamp(Scale, 0.6, 1.7); // Limit zoom levels
+        StateHasChanged();
+    }
+}
