@@ -1,0 +1,15 @@
+# Ignore build artifacts
+bin/
+obj/
+publish/
+
+# Ignore user-specific files
+*.user
+*.vs
+
+# Ignore NuGet packages
+packages/
+*.nupkg
+
+# Ignore Visual Studio temporary files
+.vs/
